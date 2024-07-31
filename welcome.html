@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('imagii.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            color: #19197a;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #315bc6;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1249c1;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome</h1>
+    <p>Please choose an option</p>
+    <div class="button-group">
+        <form action="signin.html" method="get">
+            <button type="submit">Sign In</button>
+        </form>
+        <form action="register.html" method="get">
+            <button type="submit">Register</button>
+        </form>
+
+    </div>
+</body>
+</html>

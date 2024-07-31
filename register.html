@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-left: 10px; /* Adjust padding */
+            margin-bottom: 5px; /* Space between label and input */
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 12px; /* Adjust padding */
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            input,
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Register</h1>
+        <form id="registrationForm">
+            <div class="input-group">
+                <label for="username">
+                    Username
+                </label>
+                <input type="text" id="username" name="username" required>
+                <div id="usernameError" class="error"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="email">
+                    Email
+                </label>
+                <input type="email" id="email" name="email" required>
+                <div id="emailError" class="error"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="password">
+                    Password
+                </label>
+                <input type="password" id="password" name="password" required>
+                <div id="passwordError" class="error"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="confirmPassword">
+                    Confirm Password
+                </label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <div id="confirmPasswordError" class="error"></div>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+        function getStoredUserData() {
+            return JSON.parse(localStorage.getItem('userData')) || {};
+        }
+
+        function storeUserData(userData) {
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(errorDiv => errorDiv.textContent = '');
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            let hasError = false;
+            const userData = getStoredUserData();
+
+            // Username validation
+            if (!/^[a-zA-Z]{4,12}$/.test(username)) {
+                document.getElementById('usernameError').textContent = 'Username must be 4-12 alphabetic characters only.';
+                hasError = true;
+            } else if (userData[username]) {
+                document.getElementById('usernameError').textContent = 'Username is already taken. Please choose another one.';
+                hasError = true;
+            }
+
+            // Email validation
+            if (!/^[\w._%+-]+@gmail\.com$/.test(email)) {
+                document.getElementById('emailError').textContent = 'Valid Email address (e.g., example@gmail.com).';
+                hasError = true;
+            } else if (Object.values(userData).some(user => user.email === email)) {
+                document.getElementById('emailError').textContent = 'Email is already taken. Please choose another one.';
+                hasError = true;
+            }
+
+            // Password validation
+            if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a digit, and a special character.';
+                hasError = true;
+            }
+
+            // Confirm Password validation
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Store new user data
+            userData[username] = { email, password };
+            storeUserData(userData);
+
+            // Show success message and redirect
+            alert('Registration successful! Please sign in.');
+            setTimeout(() => {
+                window.location.href = 'signin.html'; // Redirect to the sign-in page
+            }, 500); // Slight delay to allow the alert to be seen
+        });
+    </script>
+</body>
+</html>
